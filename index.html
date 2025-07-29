@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powered by Kagi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .navigation-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .country-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .country-select {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .country-select option {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .topic-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .topic-tab {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .topic-tab:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .topic-tab.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            margin: 50px 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .clusters-container {
+            display: grid;
+            gap: 30px;
+        }
+
+        .cluster-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cluster-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .cluster-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .cluster-emoji {
+            font-size: 2.5rem;
+        }
+
+        .cluster-info h2 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+
+        .cluster-meta {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .cluster-category {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .summary h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .summary p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .timeline-toggle {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            transition: background-color 0.2s ease;
+        }
+
+        .timeline-toggle:hover {
+            background: #5a6fd8;
+        }
+
+        .timeline-container {
+            display: none;
+        }
+
+        .timeline-container.show {
+            display: block;
+        }
+
+        .perspectives-toggle {
+            background: #e17055;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            transition: background-color 0.2s ease;
+        }
+
+        .perspectives-toggle:hover {
+            background: #d15a44;
+        }
+
+        .perspectives-content {
+            display: none;
+        }
+
+        .perspectives-content.show {
+            display: block;
+        }
+
+        .quote-section {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .quote-section::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 10px;
+            padding-left: 30px;
+        }
+
+        .quote-author {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .quote-source {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-align: right;
+        }
+
+        .talking-points {
+            margin: 20px 0;
+        }
+
+        .talking-points h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .talking-points ul {
+            list-style: none;
+        }
+
+        .talking-points li {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            position: relative;
+        }
+
+        .talking-points li::before {
+            content: "•";
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: -8px;
+            top: 15px;
+            background: white;
+            width: 16px;
+            text-align: center;
+        }
+
+        .perspectives {
+            margin: 20px 0;
+        }
+
+        .perspectives h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .perspective-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #e17055;
+        }
+
+        .perspective-text {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .perspective-sources {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .perspective-sources a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .perspective-sources a:hover {
+            text-decoration: underline;
+        }
+
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .timeline-date {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-right: 20px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .timeline-content {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .articles-section {
+            margin: 20px 0;
+        }
+
+        .articles-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .article-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .article-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .article-title {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+            line-height: 1.4;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .article-title:hover {
+            color: #667eea;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .article-domain {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+
+        .article-date {
+            color: #95a5a6;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 20px 0;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cluster-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .timeline-date {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>unreported</h1>
+            <p>Latest news and insights powered by Kagi</p>
+            <div class="navigation-container">
+                <div class="country-selector">
+                    <select class="country-select" id="country-select" onchange="changeCountry()">
+                        <option value="">Loading countries...</option>
+                    </select>
+                </div>
+                <div class="topic-tabs" id="topic-tabs">
+                    <!-- Topic tabs will be populated here -->
+                </div>
+            </div>
+            <button class="refresh-btn" onclick="loadNews()">🔄 Refresh News</button>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading latest news...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+            <h3>Error Loading News</h3>
+            <p id="error-message"></p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <div id="clusters-container" class="clusters-container">
+                <!-- Clusters will be populated here -->
+            </div>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-clusters">-</span>
+                    <span class="stat-label">News Clusters</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-articles">-</span>
+                    <span class="stat-label">Total Articles</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="unique-domains">-</span>
+                    <span class="stat-label">News Sources</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="last-updated">-</span>
+                    <span class="stat-label">Last Updated</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadNews() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const content = document.getElementById('content');
+            const errorMessage = document.getElementById('error-message');
+
+            // Show loading, hide others
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            content.style.display = 'none';
+
+            try {
+                let dataToFetch;
+                
+                if (currentTopic) {
+                    // If a topic is selected, fetch topic data
+                    const topicData = availableTopics.find(t => t.name === currentTopic);
+                    if (!topicData) {
+                        throw new Error('Topic not found');
+                    }
+                    dataToFetch = topicData;
+                } else {
+                    // Otherwise fetch country data
+                    const countryData = availableCountries.find(c => c.name === currentCountry);
+                    if (!countryData) {
+                        throw new Error('Country not found');
+                    }
+                    dataToFetch = countryData;
+                }
+                
+                // Check cache first
+                const cacheKey = `news_${dataToFetch.file}`;
+                const cachedData = getCachedData(cacheKey);
+                
+                if (cachedData) {
+                    console.log('Using cached data for:', dataToFetch.file);
+                    displayNews(cachedData);
+                    return;
+                }
+                
+                console.log('Fetching fresh data for:', dataToFetch.file);
+                const response = await fetch(`https://kite.kagi.com/${dataToFetch.file}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Cache the data for 12 hours
+                cacheData(cacheKey, data);
+                
+                displayNews(data);
+            } catch (err) {
+                console.error('Error fetching news:', err);
+                errorMessage.textContent = err.message || 'Failed to load news data. Please try again later.';
+                error.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayNews(data) {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('content');
+            const clustersContainer = document.getElementById('clusters-container');
+
+            // Handle different data structures
+            let items = [];
+            let totalArticles = 0;
+            let totalUniqueDomains = 0;
+
+            if (data.clusters) {
+                // Regular news structure
+                items = data.clusters;
+                totalArticles = data.clusters.reduce((sum, cluster) => sum + cluster.articles.length, 0);
+                totalUniqueDomains = data.clusters.reduce((sum, cluster) => sum + cluster.unique_domains, 0);
+            } else if (data.events) {
+                // OnThisDay structure
+                items = data.events;
+                totalArticles = data.events.reduce((sum, event) => sum + (event.articles ? event.articles.length : 0), 0);
+                totalUniqueDomains = data.events.reduce((sum, event) => sum + (event.unique_domains || 0), 0);
+            }
+
+            // Update stats
+            document.getElementById('total-clusters').textContent = items.length;
+            document.getElementById('total-articles').textContent = totalArticles;
+            document.getElementById('unique-domains').textContent = totalUniqueDomains;
+            
+            const date = new Date(data.timestamp * 1000);
+            document.getElementById('last-updated').textContent = date.toLocaleDateString();
+
+            // Clear previous content
+            clustersContainer.innerHTML = '';
+
+            // Display each item (cluster or event)
+            items.forEach(item => {
+                const itemCard = createItemCard(item, data.clusters ? 'cluster' : 'event');
+                clustersContainer.appendChild(itemCard);
+            });
+
+            // Hide loading, show content
+            loading.style.display = 'none';
+            content.style.display = 'block';
+        }
+
+        function createItemCard(item, type) {
+            const card = document.createElement('div');
+            card.className = 'cluster-card';
+
+            if (type === 'event') {
+                // Handle OnThisDay event structure
+                console.log('OnThisDay event item:', item); // Debug log
+                
+                card.innerHTML = `
+                    ${item.summary || item.description || item.text || item.content ? `
+                        <div class="summary">
+                            <h3>📋 Summary</h3>
+                            <p>${item.summary || item.description || item.text || item.content}</p>
+                        </div>
+                    ` : ''}
+
+                    ${item.articles && item.articles.length > 0 ? `
+                        <div class="articles-section">
+                            <h3>📰 Related Articles</h3>
+                            <div class="articles-grid">
+                                ${item.articles.slice(0, 6).map(article => `
+                                    <div class="article-card">
+                                        <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
+                                        <div class="article-meta">
+                                            <span class="article-domain">${article.domain}</span>
+                                            <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${!item.summary && !item.description && !item.text && !item.content && !item.articles ? `
+                        <div class="summary">
+                            <h3>📋 Event Details</h3>
+                            <p>${JSON.stringify(item, null, 2)}</p>
+                        </div>
+                    ` : ''}
+                `;
+            } else {
+                // Handle regular cluster structure
+                card.innerHTML = `
+                    <div class="cluster-header">
+                        <div class="cluster-emoji">${item.emoji || '📰'}</div>
+                        <div class="cluster-info">
+                            <h2>${item.title}</h2>
+                            <div class="cluster-meta">
+                                Cluster ${item.cluster_number} • ${item.number_of_titles} articles • ${item.unique_domains} sources
+                            </div>
+                        </div>
+                        <div class="cluster-category">${item.category}</div>
+                    </div>
+
+                    ${item.short_summary ? `
+                        <div class="summary">
+                            <h3>📋 Summary</h3>
+                            <p>${item.short_summary}</p>
+                        </div>
+                    ` : ''}
+
+                    ${item.quote ? `
+                        <div class="quote-section">
+                            <div class="quote-text">${item.quote}</div>
+                            <div class="quote-author">— ${item.quote_author}</div>
+                            <div class="quote-source">${item.quote_attribution}</div>
+                        </div>
+                    ` : ''}
+
+                    ${item.talking_points && item.talking_points.length > 0 ? `
+                        <div class="talking-points">
+                            <h3>🗣️ Key Points</h3>
+                            <ul>
+                                ${item.talking_points.map(point => `<li>${point}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    ${item.perspectives && item.perspectives.length > 0 ? `
+                        <div class="perspectives">
+                            <button class="perspectives-toggle" onclick="togglePerspectives(this)">
+                                👥 Show Different Perspectives (${item.perspectives.length} views)
+                            </button>
+                            <div class="perspectives-content">
+                                ${item.perspectives.map(perspective => `
+                                    <div class="perspective-item">
+                                        <div class="perspective-text">${perspective.text}</div>
+                                        <div class="perspective-sources">
+                                            Sources: ${perspective.sources.map(source => 
+                                                `<a href="${source.url}" target="_blank">${source.name}</a>`
+                                            ).join(', ')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${item.timeline && item.timeline.length > 0 ? `
+                        <div class="timeline">
+                            <button class="timeline-toggle" onclick="toggleTimeline(this)">
+                                📅 Show Timeline (${item.timeline.length} events)
+                            </button>
+                            <div class="timeline-container">
+                                ${item.timeline.map(timelineItem => {
+                                    if (!timelineItem || typeof timelineItem !== 'string') {
+                                        return '';
+                                    }
+                                    const parts = timelineItem.split('::');
+                                    if (parts.length < 2) {
+                                        return `
+                                            <div class="timeline-item">
+                                                <div class="timeline-content">${timelineItem}</div>
+                                            </div>
+                                        `;
+                                    }
+                                    const [date, event] = parts;
+                                    return `
+                                        <div class="timeline-item">
+                                            <div class="timeline-date">${date ? date.trim() : ''}</div>
+                                            <div class="timeline-content">${event ? event.trim() : ''}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${item.articles && item.articles.length > 0 ? `
+                        <div class="articles-section">
+                            <h3>📰 Related Articles</h3>
+                            <div class="articles-grid">
+                                ${item.articles.slice(0, 6).map(article => `
+                                    <div class="article-card">
+                                        <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
+                                        <div class="article-meta">
+                                            <span class="article-domain">${article.domain}</span>
+                                            <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+            }
+
+            return card;
+        }
+
+        function toggleTimeline(button) {
+            const timelineContainer = button.nextElementSibling;
+            const isVisible = timelineContainer.classList.contains('show');
+            
+            if (isVisible) {
+                timelineContainer.classList.remove('show');
+                button.textContent = button.textContent.replace('Hide', 'Show');
+            } else {
+                timelineContainer.classList.add('show');
+                button.textContent = button.textContent.replace('Show', 'Hide');
+            }
+        }
+
+        function togglePerspectives(button) {
+            const perspectivesContent = button.nextElementSibling;
+            const isVisible = perspectivesContent.classList.contains('show');
+            
+            if (isVisible) {
+                perspectivesContent.classList.remove('show');
+                button.textContent = button.textContent.replace('Hide', 'Show');
+            } else {
+                perspectivesContent.classList.add('show');
+                button.textContent = button.textContent.replace('Show', 'Hide');
+            }
+        }
+
+        // Country flag mapping
+        const countryFlags = {
+            'World': '🌍',
+            'USA': '🇺🇸',
+            'Australia': '🇦🇺',
+            'Belgium': '🇧🇪',
+            'Brazil': '🇧🇷',
+            'Canada': '🇨🇦',
+            'China': '🇨🇳',
+            'Colombia': '🇨🇴',
+            'Costa Rica': '🇨🇷',
+            'Czech Republic': '🇨🇿',
+            'Estonia': '🇪🇪',
+            'Finland': '🇫🇮',
+            'France': '🇫🇷',
+            'Germany': '🇩🇪',
+            'India': '🇮🇳',
+            'Ireland': '🇮🇪',
+            'Israel': '🇮🇱',
+            'Italy': '🇮🇹',
+            'Japan': '🇯🇵',
+            'Mexico': '🇲🇽',
+            'New Zealand': '🇳🇿',
+            'Palestine': '🇵🇸',
+            'Poland': '🇵🇱',
+            'Portugal': '🇵🇹',
+            'Romania': '🇷🇴',
+            'Serbia': '🇷🇸',
+            'Slovenia': '🇸🇮',
+            'South Korea': '🇰🇷',
+            'Spain': '🇪🇸',
+            'Sweden': '🇸🇪',
+            'Switzerland (DE)': '🇨🇭',
+            'Taiwan': '🇹🇼',
+            'Thailand': '🇹🇭',
+            'The Netherlands': '🇳🇱',
+            'UK': '🇬🇧',
+            'Ukraine': '🇺🇦',
+            'Europe': '🇪🇺',
+            'Germany | Hesse': '🇩🇪',
+            'USA | Vermont': '🇺🇸',
+            'USA | Virginia': '🇺🇸',
+            'Pakistan': '🇵🇰'
+        };
+
+        // Topic mapping
+        const topicFlags = {
+            'Business': '💼',
+            'Technology': '💻',
+            'Science': '🔬',
+            'Sports': '⚽',
+            'Gaming': '🎮',
+            'Bay Area': '🌉',
+            'AI': '🤖',
+            'Apple': '🍎',
+            'Bitcoin': '₿',
+            'Cryptocurrency': '🪙',
+            'Cybersecurity': '🔒',
+            'Economy': '💰',
+            'Linux & OSS': '🐧',
+            'OnThisDay': '📅'
+        };
+
+        let currentCountry = 'India';
+        let currentTopic = null;
+        let availableCountries = [];
+        let availableTopics = [];
+
+        async function loadCountries() {
+            try {
+                const response = await fetch('https://kite.kagi.com/kite.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Separate countries and topics
+                availableCountries = data.categories.filter(cat => countryFlags[cat.name]);
+                availableTopics = data.categories.filter(cat => topicFlags[cat.name]);
+                
+                populateCountryDropdown();
+                populateTopicTabs();
+                
+                // Load saved country or default to India
+                const savedCountry = localStorage.getItem('selectedCountry') || 'India';
+                if (availableCountries.find(c => c.name === savedCountry)) {
+                    currentCountry = savedCountry;
+                    updateCountryDisplay();
+                }
+                
+                // Load saved topic if any
+                const savedTopic = localStorage.getItem('selectedTopic');
+                if (savedTopic && availableTopics.find(t => t.name === savedTopic)) {
+                    currentTopic = savedTopic;
+                }
+                
+                loadNews();
+            } catch (err) {
+                console.error('Error loading countries:', err);
+                // Fallback to India if countries fail to load
+                loadNews();
+            }
+        }
+
+        // Cache helper functions
+        function cacheData(key, data) {
+            const cacheItem = {
+                data: data,
+                timestamp: Date.now(),
+                expiresAt: Date.now() + (12 * 60 * 60 * 1000) // 12 hours in milliseconds
+            };
+            localStorage.setItem(key, JSON.stringify(cacheItem));
+        }
+
+        function getCachedData(key) {
+            try {
+                const cached = localStorage.getItem(key);
+                if (!cached) return null;
+                
+                const cacheItem = JSON.parse(cached);
+                const now = Date.now();
+                
+                // Check if cache has expired
+                if (now > cacheItem.expiresAt) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                
+                return cacheItem.data;
+            } catch (error) {
+                console.error('Error reading cache:', error);
+                localStorage.removeItem(key);
+                return null;
+            }
+        }
+
+        function clearExpiredCache() {
+            const keys = Object.keys(localStorage);
+            const now = Date.now();
+            
+            keys.forEach(key => {
+                if (key.startsWith('news_')) {
+                    try {
+                        const cached = JSON.parse(localStorage.getItem(key));
+                        if (now > cached.expiresAt) {
+                            localStorage.removeItem(key);
+                            console.log('Cleared expired cache:', key);
+                        }
+                    } catch (error) {
+                        // Remove invalid cache entries
+                        localStorage.removeItem(key);
+                    }
+                }
+            });
+        }
+
+        // Initialize topic tabs after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            clearExpiredCache(); // Clean up expired cache on page load
+            loadCountries();
+            // Update topic tabs after countries are loaded
+            setTimeout(() => {
+                updateTopicTabs();
+            }, 100);
+        });
+
+        function populateCountryDropdown() {
+            const select = document.getElementById('country-select');
+            select.innerHTML = '';
+            
+            availableCountries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.name;
+                option.textContent = `${countryFlags[country.name] || '🌐'} ${country.name}`;
+                select.appendChild(option);
+            });
+        }
+
+        function populateTopicTabs() {
+            const tabsContainer = document.getElementById('topic-tabs');
+            tabsContainer.innerHTML = '';
+            
+            availableTopics.forEach(topic => {
+                const tab = document.createElement('div');
+                tab.className = 'topic-tab';
+                tab.textContent = `${topicFlags[topic.name] || '📰'} ${topic.name}`;
+                tab.onclick = () => selectTopic(topic.name);
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function changeCountry() {
+            const select = document.getElementById('country-select');
+            const newCountry = select.value;
+            
+            if (newCountry && newCountry !== currentCountry) {
+                currentCountry = newCountry;
+                currentTopic = null; // Clear topic when changing country
+                localStorage.setItem('selectedCountry', currentCountry);
+                localStorage.removeItem('selectedTopic');
+                updateCountryDisplay();
+                updateTopicTabs();
+                loadNews();
+            }
+        }
+
+        function selectTopic(topicName) {
+            if (currentTopic === topicName) {
+                // Deselect if clicking the same topic
+                currentTopic = null;
+                localStorage.removeItem('selectedTopic');
+            } else {
+                currentTopic = topicName;
+                localStorage.setItem('selectedTopic', topicName);
+            }
+            updateTopicTabs();
+            loadNews();
+        }
+
+        function updateCountryDisplay() {
+            const select = document.getElementById('country-select');
+            select.value = currentCountry;
+        }
+
+        function updateTopicTabs() {
+            const tabs = document.querySelectorAll('.topic-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.includes(currentTopic)) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+
+    </script>
+</body>
+</html> 
