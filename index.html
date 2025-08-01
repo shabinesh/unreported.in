@@ -12,63 +12,163 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
             min-height: 100vh;
-            color: #333;
+            color: #2c2c2c;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 30px;
         }
 
         .header {
             text-align: left;
-            margin-bottom: 40px;
-            color: white;
+            margin: 20px 0 30px 0;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            position: relative;
         }
 
-        .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .navigation-container {
+        .header-top {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .country-selector {
+        .header-controls {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        .header-tagline {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin: 0 0 20px 0;
+            font-style: normal;
+        }
+
+        .dark-mode-toggle {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode-toggle:hover {
+            background: #f8f9fa;
+            border-color: #6c757d;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .dark-mode-toggle:active {
+            transform: translateY(0);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #6c757d 50%, transparent 100%);
+        }
+
+        .header h1 {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #1a1a1a;
+            letter-spacing: -0.01em;
+            text-transform: none;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: #6c757d;
+            font-weight: 400;
+            margin: 0;
+            font-style: normal;
+        }
+
+
+
         .country-select {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 8px 12px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 10px 14px;
             border-radius: 8px;
             font-size: 0.9rem;
             cursor: pointer;
-            min-width: 200px;
+            min-width: 180px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .country-select:focus {
+            outline: none;
+            border-color: #6c757d;
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
         }
 
         .country-select option {
-            background: #2c3e50;
+            background: #ffffff;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .refresh-icon {
+            background: #6c757d;
             color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .refresh-icon:hover {
+            background: #495057;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .refresh-icon:active {
+            background: #343a40;
+            transform: translateY(0);
         }
 
         .topic-tabs {
@@ -78,25 +178,33 @@
         }
 
         .topic-tab {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 6px 12px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .topic-tab:hover {
-            background: rgba(255,255,255,0.2);
+            background: #f8f9fa;
+            border-color: #6c757d;
+            color: #495057;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         .topic-tab.active {
-            background: rgba(255,255,255,0.3);
-            border-color: rgba(255,255,255,0.4);
+            background: #495057;
+            border-color: #495057;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(73, 80, 87, 0.2);
         }
 
         .loading {
@@ -131,16 +239,17 @@
         }
 
         .stats-bar {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 24px;
             margin-bottom: 30px;
-            color: white;
+            color: #2c2c2c;
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             gap: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .stat-item {
@@ -149,97 +258,118 @@
 
         .stat-number {
             font-size: 2rem;
-            font-weight: bold;
+            font-weight: 700;
             display: block;
+            color: #495057;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .stat-label {
             font-size: 0.9rem;
-            opacity: 0.8;
+            color: #666;
+            font-weight: 600;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .clusters-container {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: 30px;
         }
 
         .cluster-card {
-            background: white;
-            border-radius: 20px;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .cluster-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #6c757d;
+            box-shadow: 0 4px 16px rgba(108, 117, 125, 0.15);
+            transform: translateY(-2px);
         }
 
         .cluster-header {
             display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            gap: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
         }
 
         .cluster-emoji {
             font-size: 2.5rem;
+            margin-top: 4px;
+        }
+
+        .cluster-info {
+            flex: 1;
         }
 
         .cluster-info h2 {
-            color: #2c3e50;
-            margin-bottom: 5px;
-            font-size: 1.5rem;
+            color: #2c2c2c;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.3;
+            font-family: 'Times New Roman', serif;
+            letter-spacing: -0.01em;
         }
 
         .cluster-meta {
-            color: #7f8c8d;
-            font-size: 0.9rem;
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .cluster-category {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+            background: #f8f9fa;
+            color: #495057;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-size: 0.8rem;
-            font-weight: bold;
+            font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            border: 2px solid #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .summary {
-            background: #f8f9fa;
+            margin: 25px 0;
+            background: #fafafa;
             padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            border-left: 4px solid #6c757d;
         }
 
         .summary h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
+            color: #495057;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .summary p {
-            line-height: 1.6;
-            color: #555;
+            line-height: 1.7;
+            color: #2c2c2c;
+            font-size: 1rem;
+            margin: 0;
         }
 
-        .timeline-toggle {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            transition: background-color 0.2s ease;
-        }
 
-        .timeline-toggle:hover {
-            background: #5a6fd8;
-        }
 
         .timeline-container {
             display: none;
@@ -249,21 +379,7 @@
             display: block;
         }
 
-        .perspectives-toggle {
-            background: #e17055;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            transition: background-color 0.2s ease;
-        }
 
-        .perspectives-toggle:hover {
-            background: #d15a44;
-        }
 
         .perspectives-content {
             display: none;
@@ -274,73 +390,147 @@
         }
 
         .quote-section {
-            background: linear-gradient(45deg, #74b9ff, #0984e3);
-            color: white;
+            background: #fff3e0;
+            color: #2c2c2c;
             padding: 25px;
-            border-radius: 15px;
-            margin: 20px 0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            margin: 25px 0;
             position: relative;
         }
 
         .quote-section::before {
             content: '"';
-            font-size: 4rem;
+            font-size: 2.5rem;
             position: absolute;
-            top: -10px;
-            left: 20px;
+            top: -5px;
+            left: 15px;
             opacity: 0.3;
+            color: #ff9800;
         }
 
         .quote-text {
             font-size: 1.2rem;
             font-style: italic;
-            margin-bottom: 10px;
-            padding-left: 30px;
+            margin-bottom: 12px;
+            padding-left: 20px;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .quote-author {
-            font-weight: bold;
+            font-weight: 700;
             text-align: right;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .quote-source {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size: 0.85rem;
+            color: #666;
             text-align: right;
+            font-family: 'Arial', sans-serif;
+            font-style: italic;
         }
 
         .talking-points {
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         .talking-points h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
+            color: #495057;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .talking-points ul {
             list-style: none;
+            padding: 0;
         }
 
         .talking-points li {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 10px;
+            background: #fafafa;
+            padding: 18px;
+            margin-bottom: 12px;
             border-radius: 8px;
-            border-left: 3px solid #667eea;
+            border-left: 4px solid #6c757d;
             position: relative;
+            line-height: 1.6;
+            font-size: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .talking-points li::before {
             content: "•";
-            color: #667eea;
+            color: #6c757d;
             font-weight: bold;
             position: absolute;
             left: -8px;
-            top: 15px;
+            top: 18px;
             background: white;
             width: 16px;
             text-align: center;
+        }
+
+        .collapsible-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .timeline-toggle,
+        .perspectives-toggle,
+        .articles-toggle {
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timeline-toggle {
+            background: #2196F3;
+        }
+
+        .timeline-toggle:hover {
+            background: #1976D2;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .perspectives-toggle {
+            background: #4CAF50;
+        }
+
+        .perspectives-toggle:hover {
+            background: #388E3C;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .articles-toggle {
+            background: #FF9800;
+        }
+
+        .articles-toggle:hover {
+            background: #F57C00;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
         }
 
         .perspectives {
@@ -416,44 +606,52 @@
         }
 
         .articles-section {
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
-        .articles-section h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
+
+
+        .articles-content {
+            display: none;
+        }
+
+        .articles-content.show {
+            display: block;
         }
 
         .articles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
 
         .article-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            transition: transform 0.2s ease;
-            border: 1px solid #e9ecef;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 18px;
+            transition: all 0.2s ease;
+            border: 2px solid #e0e0e0;
         }
 
         .article-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #6c757d;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(108, 117, 125, 0.15);
         }
 
         .article-title {
-            color: #2c3e50;
+            color: #2c2c2c;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
             line-height: 1.4;
             display: block;
             margin-bottom: 10px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1rem;
         }
 
         .article-title:hover {
-            color: #667eea;
+            color: #495057;
         }
 
         .article-meta {
@@ -461,73 +659,306 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.8rem;
-            color: #7f8c8d;
-            margin-bottom: 10px;
+            color: #666;
+            margin-bottom: 0;
         }
 
         .article-domain {
-            background: #667eea;
+            background: #6c757d;
             color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
             font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .article-date {
-            color: #95a5a6;
+            color: #666;
+            font-weight: 600;
         }
 
-        .refresh-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            margin: 20px 0;
+        /* Dark Mode Styles */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #fafafa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --border-light: #e9ecef;
+            --shadow-color: rgba(0,0,0,0.1);
+            --shadow-hover: rgba(0,0,0,0.15);
         }
 
-        .refresh-btn:hover {
-            transform: translateY(-2px);
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #e9ecef;
+            --text-muted: #adb5bd;
+            --border-color: #404040;
+            --border-light: #333333;
+            --shadow-color: rgba(0,0,0,0.3);
+            --shadow-hover: rgba(0,0,0,0.4);
         }
 
-        .refresh-btn:active {
-            transform: translateY(0);
+        /* Apply CSS variables to existing elements */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+        }
+
+        .header p {
+            color: var(--text-muted);
+        }
+
+        .dark-mode-toggle {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .dark-mode-toggle:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-muted);
+        }
+
+        .country-select {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .country-select option {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+
+        .topic-tab {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .topic-tab:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-muted);
+            color: var(--text-secondary);
+        }
+
+        .cluster-card {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .cluster-card:hover {
+            border-color: var(--text-muted);
+        }
+
+        .cluster-info h2 {
+            color: var(--text-primary);
+        }
+
+        .cluster-meta {
+            color: var(--text-muted);
+        }
+
+        .cluster-category {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .summary {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--text-muted);
+        }
+
+        .summary h3 {
+            color: var(--text-secondary);
+        }
+
+        .summary p {
+            color: var(--text-primary);
+        }
+
+        .quote-section {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .quote-author {
+            color: var(--text-secondary);
+        }
+
+        .talking-points h3 {
+            color: var(--text-secondary);
+        }
+
+        .talking-points li {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--text-muted);
+        }
+
+        .talking-points li::before {
+            color: var(--text-muted);
+            background: var(--bg-primary);
+        }
+
+        .perspective-item {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--border-color);
+        }
+
+        .perspective-text {
+            color: var(--text-primary);
+        }
+
+        .perspective-sources {
+            color: var(--text-muted);
+        }
+
+        .timeline-item {
+            background: var(--bg-tertiary);
+        }
+
+        .timeline-content {
+            color: var(--text-primary);
+        }
+
+        .article-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+        }
+
+        .article-card:hover {
+            border-color: var(--text-muted);
+        }
+
+        .article-title {
+            color: var(--text-primary);
+        }
+
+        .article-title:hover {
+            color: var(--text-secondary);
+        }
+
+        .article-meta {
+            color: var(--text-muted);
+        }
+
+        .article-domain {
+            background: var(--text-muted);
+            color: var(--bg-primary);
+        }
+
+        .stats-bar {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .stat-number {
+            color: var(--text-secondary);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .loading {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .error {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+
 
         @media (max-width: 768px) {
             .container {
-                padding: 15px;
+                padding: 0 16px;
             }
 
             .header h1 {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+            }
+
+            .header {
+                margin-bottom: 40px;
+                padding-top: 20px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .country-select {
+                min-width: 150px;
+                flex: 1;
             }
 
             .stats-bar {
                 flex-direction: column;
                 text-align: center;
+                gap: 16px;
             }
 
             .cluster-header {
                 flex-direction: column;
-                text-align: center;
+                text-align: left;
+                gap: 12px;
+            }
+
+            .cluster-info h2 {
+                font-size: 1.6rem;
             }
 
             .timeline-item {
                 flex-direction: column;
-                text-align: center;
+                text-align: left;
             }
 
             .timeline-date {
                 margin-right: 0;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
 
             .articles-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .topic-tabs {
+                gap: 4px;
+            }
+
+            .topic-tab {
+                font-size: 0.75rem;
+                padding: 4px 10px;
             }
         }
     </style>
@@ -535,19 +966,22 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>unreported</h1>
-            <p>Latest news and insights powered by Kagi</p>
-            <div class="navigation-container">
-                <div class="country-selector">
+            <div class="header-top">
+                <h1>unreported</h1>
+                <div class="header-controls">
                     <select class="country-select" id="country-select" onchange="changeCountry()">
                         <option value="">Loading countries...</option>
                     </select>
-                </div>
-                <div class="topic-tabs" id="topic-tabs">
-                    <!-- Topic tabs will be populated here -->
+                    <button class="refresh-icon" onclick="loadNews()" title="Refresh News">🔄</button>
+                    <button class="dark-mode-toggle" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                        <span class="toggle-icon">🌙</span>
+                    </button>
                 </div>
             </div>
-            <button class="refresh-btn" onclick="loadNews()">🔄 Refresh News</button>
+            <p class="header-tagline">Latest news and insights powered by Kagi</p>
+            <div class="topic-tabs" id="topic-tabs">
+                <!-- Topic tabs will be populated here -->
+            </div>
         </div>
 
         <div id="loading" class="loading">
@@ -708,18 +1142,24 @@
                     ` : ''}
 
                     ${item.articles && item.articles.length > 0 ? `
+                        <div class="collapsible-buttons">
+                            <button class="articles-toggle" onclick="toggleArticles(this)">
+                                📰 Show Articles (${item.articles.length})
+                            </button>
+                        </div>
                         <div class="articles-section">
-                            <h3>📰 Related Articles</h3>
-                            <div class="articles-grid">
-                                ${item.articles.slice(0, 6).map(article => `
-                                    <div class="article-card">
-                                        <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
-                                        <div class="article-meta">
-                                            <span class="article-domain">${article.domain}</span>
-                                            <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                            <div class="articles-content">
+                                <div class="articles-grid">
+                                    ${item.articles.slice(0, 6).map(article => `
+                                        <div class="article-card">
+                                            <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
+                                            <div class="article-meta">
+                                                <span class="article-domain">${article.domain}</span>
+                                                <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                `).join('')}
+                                    `).join('')}
+                                </div>
                             </div>
                         </div>
                     ` : ''}
@@ -769,11 +1209,28 @@
                         </div>
                     ` : ''}
 
+                    ${(item.perspectives && item.perspectives.length > 0) || (item.timeline && item.timeline.length > 0) || (item.articles && item.articles.length > 0) ? `
+                        <div class="collapsible-buttons">
+                            ${item.perspectives && item.perspectives.length > 0 ? `
+                                <button class="perspectives-toggle" onclick="togglePerspectives(this)">
+                                    👥 Show Perspectives (${item.perspectives.length})
+                                </button>
+                            ` : ''}
+                            ${item.timeline && item.timeline.length > 0 ? `
+                                <button class="timeline-toggle" onclick="toggleTimeline(this)">
+                                    📅 Show Timeline (${item.timeline.length})
+                                </button>
+                            ` : ''}
+                            ${item.articles && item.articles.length > 0 ? `
+                                <button class="articles-toggle" onclick="toggleArticles(this)">
+                                    📰 Show Articles (${item.articles.length})
+                                </button>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
                     ${item.perspectives && item.perspectives.length > 0 ? `
                         <div class="perspectives">
-                            <button class="perspectives-toggle" onclick="togglePerspectives(this)">
-                                👥 Show Different Perspectives (${item.perspectives.length} views)
-                            </button>
                             <div class="perspectives-content">
                                 ${item.perspectives.map(perspective => `
                                     <div class="perspective-item">
@@ -791,9 +1248,6 @@
 
                     ${item.timeline && item.timeline.length > 0 ? `
                         <div class="timeline">
-                            <button class="timeline-toggle" onclick="toggleTimeline(this)">
-                                📅 Show Timeline (${item.timeline.length} events)
-                            </button>
                             <div class="timeline-container">
                                 ${item.timeline.map(timelineItem => {
                                     if (!timelineItem || typeof timelineItem !== 'string') {
@@ -821,17 +1275,18 @@
 
                     ${item.articles && item.articles.length > 0 ? `
                         <div class="articles-section">
-                            <h3>📰 Related Articles</h3>
-                            <div class="articles-grid">
-                                ${item.articles.slice(0, 6).map(article => `
-                                    <div class="article-card">
-                                        <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
-                                        <div class="article-meta">
-                                            <span class="article-domain">${article.domain}</span>
-                                            <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                            <div class="articles-content">
+                                <div class="articles-grid">
+                                    ${item.articles.slice(0, 6).map(article => `
+                                        <div class="article-card">
+                                            <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
+                                            <div class="article-meta">
+                                                <span class="article-domain">${article.domain}</span>
+                                                <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                `).join('')}
+                                    `).join('')}
+                                </div>
                             </div>
                         </div>
                     ` : ''}
@@ -842,27 +1297,97 @@
         }
 
         function toggleTimeline(button) {
-            const timelineContainer = button.nextElementSibling;
+            const card = button.closest('.cluster-card');
+            const timelineContainer = card.querySelector('.timeline-container');
+            const perspectivesContent = card.querySelector('.perspectives-content');
+            const articlesContent = card.querySelector('.articles-content');
+            
+            // Get all buttons in this card
+            const timelineBtn = card.querySelector('.timeline-toggle');
+            const perspectivesBtn = card.querySelector('.perspectives-toggle');
+            const articlesBtn = card.querySelector('.articles-toggle');
+            
             const isVisible = timelineContainer.classList.contains('show');
             
             if (isVisible) {
+                // Hide timeline
                 timelineContainer.classList.remove('show');
                 button.textContent = button.textContent.replace('Hide', 'Show');
             } else {
+                // Hide all other sections first
+                perspectivesContent.classList.remove('show');
+                articlesContent.classList.remove('show');
+                
+                // Reset all button texts
+                if (perspectivesBtn) perspectivesBtn.textContent = perspectivesBtn.textContent.replace('Hide', 'Show');
+                if (articlesBtn) articlesBtn.textContent = articlesBtn.textContent.replace('Hide', 'Show');
+                
+                // Show timeline
                 timelineContainer.classList.add('show');
                 button.textContent = button.textContent.replace('Show', 'Hide');
             }
         }
 
         function togglePerspectives(button) {
-            const perspectivesContent = button.nextElementSibling;
+            const card = button.closest('.cluster-card');
+            const timelineContainer = card.querySelector('.timeline-container');
+            const perspectivesContent = card.querySelector('.perspectives-content');
+            const articlesContent = card.querySelector('.articles-content');
+            
+            // Get all buttons in this card
+            const timelineBtn = card.querySelector('.timeline-toggle');
+            const perspectivesBtn = card.querySelector('.perspectives-toggle');
+            const articlesBtn = card.querySelector('.articles-toggle');
+            
             const isVisible = perspectivesContent.classList.contains('show');
             
             if (isVisible) {
+                // Hide perspectives
                 perspectivesContent.classList.remove('show');
                 button.textContent = button.textContent.replace('Hide', 'Show');
             } else {
+                // Hide all other sections first
+                timelineContainer.classList.remove('show');
+                articlesContent.classList.remove('show');
+                
+                // Reset all button texts
+                if (timelineBtn) timelineBtn.textContent = timelineBtn.textContent.replace('Hide', 'Show');
+                if (articlesBtn) articlesBtn.textContent = articlesBtn.textContent.replace('Hide', 'Show');
+                
+                // Show perspectives
                 perspectivesContent.classList.add('show');
+                button.textContent = button.textContent.replace('Show', 'Hide');
+            }
+        }
+
+        function toggleArticles(button) {
+            const card = button.closest('.cluster-card');
+            const timelineContainer = card.querySelector('.timeline-container');
+            const perspectivesContent = card.querySelector('.perspectives-content');
+            const articlesContent = card.querySelector('.articles-content');
+            
+            // Get all buttons in this card
+            const timelineBtn = card.querySelector('.timeline-toggle');
+            const perspectivesBtn = card.querySelector('.perspectives-toggle');
+            const articlesBtn = card.querySelector('.articles-toggle');
+            
+            const isVisible = articlesContent.classList.contains('show');
+            
+            if (isVisible) {
+                // Hide articles
+                articlesContent.classList.remove('show');
+                button.textContent = button.textContent.replace('Hide', 'Show');
+            } else {
+                // Hide all other sections first
+                timelineContainer.classList.remove('show');
+                perspectivesContent.classList.remove('show');
+                
+                // Reset all button texts
+                if (timelineBtn) timelineBtn.textContent = timelineBtn.textContent.replace('Hide', 'Show');
+                if (perspectivesBtn) perspectivesBtn.textContent = perspectivesBtn.textContent.replace('Hide', 'Show');
+                
+                // Show articles
+                articlesContent.classList.add('show');
                 button.textContent = button.textContent.replace('Show', 'Hide');
             }
         }
@@ -1024,8 +1549,42 @@
             });
         }
 
+        // Dark mode functionality
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggle = document.getElementById('dark-mode-toggle');
+            const icon = toggle.querySelector('.toggle-icon');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize dark mode from localStorage
+        function initializeDarkMode() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const toggle = document.getElementById('dark-mode-toggle');
+            const icon = toggle.querySelector('.toggle-icon');
+            
+            if (savedTheme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                icon.textContent = '☀️';
+            } else {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+            }
+        }
+
         // Initialize topic tabs after DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
+            initializeDarkMode(); // Initialize dark mode
             clearExpiredCache(); // Clean up expired cache on page load
             loadCountries();
             // Update topic tabs after countries are loaded
