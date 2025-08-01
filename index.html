@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Powered by Kagi</title>
+    <title>News - Powered by Kagi</title>
+    <script defer src="/_vercel/insights/script.js"></script>
     <style>
         * {
             margin: 0;
@@ -286,6 +287,8 @@
             padding: 30px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            position: relative;
         }
 
         .cluster-card:hover {
@@ -293,6 +296,44 @@
             box-shadow: 0 4px 16px rgba(108, 117, 125, 0.15);
             transform: translateY(-2px);
         }
+
+        .cluster-card.read {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .read-checkmark {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cluster-card.read .read-checkmark {
+            opacity: 1;
+        }
+
+        .card-content {
+            display: none;
+        }
+
+        .card-content.show {
+            display: block;
+        }
+
+
+
+
 
         .cluster-header {
             display: flex;
@@ -322,13 +363,24 @@
             letter-spacing: -0.01em;
         }
 
-        .cluster-meta {
-            color: #666;
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: 'Arial', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .cluster-stats {
+            margin-left: auto;
+            margin-right: 15px;
+        }
+
+        .stats-icon {
+            font-size: 1.2rem;
+            cursor: help;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(108, 117, 125, 0.1);
+        }
+
+        .stats-icon:hover {
+            opacity: 1;
+            background: rgba(108, 117, 125, 0.2);
         }
 
         .cluster-category {
@@ -769,12 +821,34 @@
             border-color: var(--text-muted);
         }
 
+        .cluster-card.read {
+            border-color: #28a745;
+            background: var(--bg-secondary);
+        }
+
+        .read-checkmark {
+            background: #28a745;
+            color: white;
+        }
+
         .cluster-info h2 {
             color: var(--text-primary);
         }
 
-        .cluster-meta {
-            color: var(--text-muted);
+        .cluster-stats {
+            margin-left: auto;
+            margin-right: 15px;
+        }
+
+        .stats-icon {
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-icon:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .cluster-category {
@@ -1123,64 +1197,87 @@
             // Hide loading, show content
             loading.style.display = 'none';
             content.style.display = 'block';
+            
+            // Load read status for cards
+            loadReadStatus();
         }
 
         function createItemCard(item, type) {
             const card = document.createElement('div');
             card.className = 'cluster-card';
+            
+            // Add read checkmark
+            const readCheckmark = document.createElement('div');
+            readCheckmark.className = 'read-checkmark';
+            readCheckmark.innerHTML = '✓';
+            card.appendChild(readCheckmark);
 
             if (type === 'event') {
                 // Handle OnThisDay event structure
                 console.log('OnThisDay event item:', item); // Debug log
                 
-                card.innerHTML = `
-                    ${item.summary || item.description || item.text || item.content ? `
-                        <div class="summary">
-                            <h3>📋 Summary</h3>
-                            <p>${item.summary || item.description || item.text || item.content}</p>
-                        </div>
-                    ` : ''}
-
-                    ${item.articles && item.articles.length > 0 ? `
-                        <div class="collapsible-buttons">
-                            <button class="articles-toggle" onclick="toggleArticles(this)">
-                                📰 Show Articles (${item.articles.length})
-                            </button>
-                        </div>
-                        <div class="articles-section">
-                            <div class="articles-content">
-                                <div class="articles-grid">
-                                    ${item.articles.slice(0, 6).map(article => `
-                                        <div class="article-card">
-                                            <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
-                                            <div class="article-meta">
-                                                <span class="article-domain">${article.domain}</span>
-                                                <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
+                const summary = item.summary || item.description || item.text || item.content;
+                
+                card.innerHTML += `
+                    <div class="cluster-header">
+                        <div class="cluster-emoji">📅</div>
+                        <div class="cluster-info">
+                            <h2>On This Day</h2>
+                            <div class="cluster-meta">
+                                Historical Event
                             </div>
                         </div>
-                    ` : ''}
+                    </div>
 
-                    ${!item.summary && !item.description && !item.text && !item.content && !item.articles ? `
+                    ${summary ? `
                         <div class="summary">
-                            <h3>📋 Event Details</h3>
-                            <p>${JSON.stringify(item, null, 2)}</p>
+                            <h3>📋 Summary</h3>
+                            <p>${summary}</p>
                         </div>
                     ` : ''}
+
+                    <div class="card-content">
+                        ${item.articles && item.articles.length > 0 ? `
+                            <div class="collapsible-buttons">
+                                <button class="articles-toggle" onclick="toggleArticles(this)">
+                                    📰 Show Articles (${item.articles.length})
+                                </button>
+                            </div>
+                            <div class="articles-section">
+                                <div class="articles-content">
+                                    <div class="articles-grid">
+                                        ${item.articles.slice(0, 6).map(article => `
+                                            <div class="article-card">
+                                                <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
+                                                <div class="article-meta">
+                                                    <span class="article-domain">${article.domain}</span>
+                                                    <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${!summary && !item.articles ? `
+                            <div class="summary">
+                                <h3>📋 Event Details</h3>
+                                <p>${JSON.stringify(item, null, 2)}</p>
+                            </div>
+                        ` : ''}
+                    </div>
                 `;
             } else {
                 // Handle regular cluster structure
-                card.innerHTML = `
+                card.innerHTML += `
                     <div class="cluster-header">
                         <div class="cluster-emoji">${item.emoji || '📰'}</div>
                         <div class="cluster-info">
                             <h2>${item.title}</h2>
-                            <div class="cluster-meta">
-                                Cluster ${item.cluster_number} • ${item.number_of_titles} articles • ${item.unique_domains} sources
-                            </div>
+                        </div>
+                        <div class="cluster-stats">
+                            <span class="stats-icon" title="Cluster ${item.cluster_number} • ${item.number_of_titles} articles • ${item.unique_domains} sources">📊</span>
                         </div>
                         <div class="cluster-category">${item.category}</div>
                     </div>
@@ -1192,108 +1289,162 @@
                         </div>
                     ` : ''}
 
-                    ${item.quote ? `
-                        <div class="quote-section">
-                            <div class="quote-text">${item.quote}</div>
-                            <div class="quote-author">— ${item.quote_author}</div>
-                            <div class="quote-source">${item.quote_attribution}</div>
-                        </div>
-                    ` : ''}
-
-                    ${item.talking_points && item.talking_points.length > 0 ? `
-                        <div class="talking-points">
-                            <h3>🗣️ Key Points</h3>
-                            <ul>
-                                ${item.talking_points.map(point => `<li>${point}</li>`).join('')}
-                            </ul>
-                        </div>
-                    ` : ''}
-
-                    ${(item.perspectives && item.perspectives.length > 0) || (item.timeline && item.timeline.length > 0) || (item.articles && item.articles.length > 0) ? `
-                        <div class="collapsible-buttons">
-                            ${item.perspectives && item.perspectives.length > 0 ? `
-                                <button class="perspectives-toggle" onclick="togglePerspectives(this)">
-                                    👥 Show Perspectives (${item.perspectives.length})
-                                </button>
-                            ` : ''}
-                            ${item.timeline && item.timeline.length > 0 ? `
-                                <button class="timeline-toggle" onclick="toggleTimeline(this)">
-                                    📅 Show Timeline (${item.timeline.length})
-                                </button>
-                            ` : ''}
-                            ${item.articles && item.articles.length > 0 ? `
-                                <button class="articles-toggle" onclick="toggleArticles(this)">
-                                    📰 Show Articles (${item.articles.length})
-                                </button>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-
-                    ${item.perspectives && item.perspectives.length > 0 ? `
-                        <div class="perspectives">
-                            <div class="perspectives-content">
-                                ${item.perspectives.map(perspective => `
-                                    <div class="perspective-item">
-                                        <div class="perspective-text">${perspective.text}</div>
-                                        <div class="perspective-sources">
-                                            Sources: ${perspective.sources.map(source => 
-                                                `<a href="${source.url}" target="_blank">${source.name}</a>`
-                                            ).join(', ')}
-                                        </div>
-                                    </div>
-                                `).join('')}
+                    <div class="card-content">
+                        ${item.quote ? `
+                            <div class="quote-section">
+                                <div class="quote-text">${item.quote}</div>
+                                <div class="quote-author">— ${item.quote_author}</div>
+                                <div class="quote-source">${item.quote_attribution}</div>
                             </div>
-                        </div>
-                    ` : ''}
+                        ` : ''}
 
-                    ${item.timeline && item.timeline.length > 0 ? `
-                        <div class="timeline">
-                            <div class="timeline-container">
-                                ${item.timeline.map(timelineItem => {
-                                    if (!timelineItem || typeof timelineItem !== 'string') {
-                                        return '';
-                                    }
-                                    const parts = timelineItem.split('::');
-                                    if (parts.length < 2) {
-                                        return `
-                                            <div class="timeline-item">
-                                                <div class="timeline-content">${timelineItem}</div>
-                                            </div>
-                                        `;
-                                    }
-                                    const [date, event] = parts;
-                                    return `
-                                        <div class="timeline-item">
-                                            <div class="timeline-date">${date ? date.trim() : ''}</div>
-                                            <div class="timeline-content">${event ? event.trim() : ''}</div>
-                                        </div>
-                                    `;
-                                }).join('')}
+                        ${item.talking_points && item.talking_points.length > 0 ? `
+                            <div class="talking-points">
+                                <h3>🗣️ Key Points</h3>
+                                <ul>
+                                    ${item.talking_points.map(point => `<li>${point}</li>`).join('')}
+                                </ul>
                             </div>
-                        </div>
-                    ` : ''}
+                        ` : ''}
 
-                    ${item.articles && item.articles.length > 0 ? `
-                        <div class="articles-section">
-                            <div class="articles-content">
-                                <div class="articles-grid">
-                                    ${item.articles.slice(0, 6).map(article => `
-                                        <div class="article-card">
-                                            <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
-                                            <div class="article-meta">
-                                                <span class="article-domain">${article.domain}</span>
-                                                <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                        ${(item.perspectives && item.perspectives.length > 0) || (item.timeline && item.timeline.length > 0) || (item.articles && item.articles.length > 0) ? `
+                            <div class="collapsible-buttons">
+                                ${item.perspectives && item.perspectives.length > 0 ? `
+                                    <button class="perspectives-toggle" onclick="togglePerspectives(this)">
+                                        👥 Show Perspectives (${item.perspectives.length})
+                                    </button>
+                                ` : ''}
+                                ${item.timeline && item.timeline.length > 0 ? `
+                                    <button class="timeline-toggle" onclick="toggleTimeline(this)">
+                                        📅 Show Timeline (${item.timeline.length})
+                                    </button>
+                                ` : ''}
+                                ${item.articles && item.articles.length > 0 ? `
+                                    <button class="articles-toggle" onclick="toggleArticles(this)">
+                                        📰 Show Articles (${item.articles.length})
+                                    </button>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+
+                        ${item.perspectives && item.perspectives.length > 0 ? `
+                            <div class="perspectives">
+                                <div class="perspectives-content">
+                                    ${item.perspectives.map(perspective => `
+                                        <div class="perspective-item">
+                                            <div class="perspective-text">${perspective.text}</div>
+                                            <div class="perspective-sources">
+                                                Sources: ${perspective.sources.map(source => 
+                                                    `<a href="${source.url}" target="_blank">${source.name}</a>`
+                                                ).join(', ')}
                                             </div>
                                         </div>
                                     `).join('')}
                                 </div>
                             </div>
-                        </div>
-                    ` : ''}
+                        ` : ''}
+
+                        ${item.timeline && item.timeline.length > 0 ? `
+                            <div class="timeline">
+                                <div class="timeline-container">
+                                    ${item.timeline.map(timelineItem => {
+                                        if (!timelineItem || typeof timelineItem !== 'string') {
+                                            return '';
+                                        }
+                                        const parts = timelineItem.split('::');
+                                        if (parts.length < 2) {
+                                            return `
+                                                <div class="timeline-item">
+                                                    <div class="timeline-content">${timelineItem}</div>
+                                                </div>
+                                            `;
+                                        }
+                                        const [date, event] = parts;
+                                        return `
+                                            <div class="timeline-item">
+                                                <div class="timeline-date">${date ? date.trim() : ''}</div>
+                                                <div class="timeline-content">${event ? event.trim() : ''}</div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${item.articles && item.articles.length > 0 ? `
+                            <div class="articles-section">
+                                <div class="articles-content">
+                                    <div class="articles-grid">
+                                        ${item.articles.slice(0, 6).map(article => `
+                                            <div class="article-card">
+                                                <a href="${article.link}" target="_blank" class="article-title">${article.title}</a>
+                                                <div class="article-meta">
+                                                    <span class="article-domain">${article.domain}</span>
+                                                    <span class="article-date">${new Date(article.date).toLocaleDateString()}</span>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
                 `;
             }
 
+            // Add click event to expand/collapse card
+            card.addEventListener('click', function(e) {
+                // Don't expand if clicking on buttons or links
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) {
+                    return;
+                }
+                
+                toggleCard(card);
+            });
+
             return card;
+        }
+
+        function toggleCard(card) {
+            const cardContent = card.querySelector('.card-content');
+            const isExpanded = card.classList.contains('expanded');
+            
+            if (isExpanded) {
+                // Collapse card
+                card.classList.remove('expanded');
+                cardContent.classList.remove('show');
+            } else {
+                // Expand card
+                card.classList.add('expanded');
+                cardContent.classList.add('show');
+                
+                // Mark as read
+                markAsRead(card);
+            }
+        }
+
+        function markAsRead(card) {
+            card.classList.add('read');
+            
+            // Save read status to localStorage
+            const cardTitle = card.querySelector('h2')?.textContent || 'Unknown';
+            const readCards = JSON.parse(localStorage.getItem('readCards') || '[]');
+            if (!readCards.includes(cardTitle)) {
+                readCards.push(cardTitle);
+                localStorage.setItem('readCards', JSON.stringify(readCards));
+            }
+        }
+
+        function loadReadStatus() {
+            const readCards = JSON.parse(localStorage.getItem('readCards') || '[]');
+            const cards = document.querySelectorAll('.cluster-card');
+            
+            cards.forEach(card => {
+                const cardTitle = card.querySelector('h2')?.textContent || 'Unknown';
+                if (readCards.includes(cardTitle)) {
+                    card.classList.add('read');
+                }
+            });
         }
 
         function toggleTimeline(button) {
